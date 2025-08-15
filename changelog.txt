@@ -1,5 +1,13 @@
 # Changelog for System Maintenance Script
 
+## Version 1.8.0 - August 15, 2025
+- Added `chkdsk /f /sdcleanup c:` command after `chkdsk /scan c:` to fix file system errors and clean up unused security descriptors.
+- Updated CHKDSK Event Log analysis to include errors and repairs from both CHKDSK commands.
+- Updated `$chkdskRepairPattern` to include "cleaned" for detecting `/sdcleanup` actions.
+- Updated version to 1.8.0 to reflect new CHKDSK command.
+- Updated `readme.md` to document the new CHKDSK command and its analysis.
+- Retained all previous functionality: hostname/date log naming, log rotation, Yes/No prompts, optional `/restorehealth` source, Contig command, real-time SFC progress, and analysis of DISM.log, CBS.log, Event Log, and Contig output.
+
 ## Version 1.7.0 - August 15, 2025
 - Modified `sfc /scannow` execution to use `Start-Process` with `-NoNewWindow` to display real-time progress output in the console.
 - Captured `sfc /scannow` output to a temporary file, then appended to the log and displayed in the console.
