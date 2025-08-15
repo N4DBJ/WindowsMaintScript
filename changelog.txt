@@ -1,5 +1,13 @@
 # Changelog for System Maintenance Script
 
+## Version 1.9.0 - August 15, 2025
+- Added check for `C:\SysinternalsSuite` before DISM commands.
+- If `C:\SysinternalsSuite` is not found, prompt user (default "No") to download Sysinternals Suite from https://download.sysinternals.com/files/SysinternalsSuite.zip, extract to `C:\SysinternalsSuite`, and add to system PATH.
+- Updated `contig` check to include instructions to ensure `C:\SysinternalsSuite` is in PATH if download is skipped.
+- Updated version to 1.9.0 to reflect Sysinternals Suite download feature.
+- Updated `readme.md` to document the Sysinternals Suite download feature and requirements.
+- Retained all previous functionality: hostname/date log naming, log rotation, Yes/No prompts, optional `/restorehealth` source, Contig command, real-time SFC progress, CHKDSK commands, and analysis of DISM.log, CBS.log, Event Log, and Contig output.
+
 ## Version 1.8.0 - August 15, 2025
 - Added `chkdsk /f /sdcleanup c:` command after `chkdsk /scan c:` to fix file system errors and clean up unused security descriptors.
 - Updated CHKDSK Event Log analysis to include errors and repairs from both CHKDSK commands.
@@ -21,7 +29,6 @@
 - Updated version to 1.6.0 to reflect Contig output analysis.
 - Updated `readme.md` to document Contig output analysis.
 - Retained all previous functionality: hostname/date log naming, log rotation, Yes/No prompts, optional `/restorehealth` source, Contig command, and analysis of DISM.log, CBS.log, and CHKDSK Event Log.
-
 ## Version 1.5.0 - August 15, 2025
 - Added `contig` command to defragment the Master File Table (MFT) on a user-specified drive (default: C:).
 - Implemented drive letter prompt with validation for the `contig` command.
