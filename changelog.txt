@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to the WindowsMaintScript project will be documented in this file.
 
+## [2.5.2] - 2025-08-16
+### Fixed
+- Corrected PowerShell parsing errors in Shadow Copy Maintenance section by using `${shadowVolume}` in `Write-Host` statements to handle colons in shadow volume names (e.g., `\Device\HarddiskVolumeShadowCopy3`).
+
 ## [2.5.1] - 2025-08-16
 ### Changed
 - Modified Contig command from `contig -v -s <drive>:\$MFT` to `contig -v -accepteula <drive>:\$MFT` to remove recursive flag (-s) causing issues and add -accepteula for first-run license acceptance.

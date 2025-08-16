@@ -45,8 +45,8 @@ This PowerShell script automates comprehensive system maintenance tasks on Windo
   - **Malware Scan**:
     - `Start-MpScan -ScanType QuickScan`: Runs quick Windows Defender scan.
     - Event Log analysis (IDs 1000, 1001) for threats.
-* Logs all outputs to `CombinedSystemMaintenanceLog_HOSTNAME_YYYYMMDD.txt` with rotation (e.g., `_1`, `_2` if file exists).
-* Displays on-screen results after each command (e.g., "CheckHealth Result: No corruption detected") and section summaries (e.g., "OS Maintenance Summary: Errors=0, Repairs=0").
+* Logs all outputs to `CombinedSystemMaintenanceLog_HOSTNAME_YYYYMMDD.txt` (e.g., `CombinedSystemMaintenanceLog_DESKTOP123_20250816.txt`). If the file exists, a numeric suffix (e.g., `_1`, `_2`) is appended. Contains all command outputs, skipped commands, drive type details, cleanup metrics, section summaries, and analysis summary.
+* Displays on-screen results after each command (e.g., "Contig Result: MFT on C: in 10 fragments") and section summaries (e.g., "Disk Maintenance Summary: Errors=0, Repairs=1"), and check the log file (e.g., `CombinedSystemMaintenanceLog_HOSTNAME_YYYYMMDD.txt`) for detailed results.
 * Analyzes `DISM.log`, `CBS.log`, and Event Logs (System/Application, IDs 7, 11, 50, 55, 98, 137, 140, 153, 219, 41, 7023, 2004, 1001, 12289, 12290) for errors and repairs, with recommendations (e.g., "Run full CHKDSK /f /r if disk errors detected").
 * Supports SSD vs. HDD detection to optimize defrag (TRIM for SSDs, prompt for HDDs).
 * Downloads Sysinternals Suite if `contig.exe` is missing (prompted, default "No").
@@ -107,3 +107,13 @@ This PowerShell script automates comprehensive system maintenance tasks on Windo
 * **Change Default Prompts**: Modify the `Default` parameter in the `Confirm-Action` function (e.g., `Default = "N"`) for different section or command defaults.
 * **Repair Source**: Set `$repairSource` to a WIM file path (e.g., `WIM:D:\sources\install.wim:1`) or leave as `$null` for Windows Update.
 * **Contig Path**: If `contig.exe` is not in `C:\SysinternalsSuite` or PATH, modify the script to specify its full path (e.g., `C:\Tools\contig.exe`).
+
+## Changelog
+
+### [2.5.2] - 2025-08-16
+#### Fixed
+- Corrected PowerShell parsing errors in Shadow Copy Maintenance section by using `${shadowVolume}` in `Write-Host` statements to handle colons in shadow volume names (e.g., `\Device\HarddiskVolumeShadowCopy3`).
+
+### [2.5.1] - 2025-08-16
+#### Changed
+- Modified Contig command from `contig -v -s <drive>:\$MFT` to `contig -v -accepteula
