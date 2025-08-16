@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to the WindowsMaintScript project will be documented in this file.
 
+## [2.5.1] - 2025-08-16
+### Changed
+- Modified Contig command from `contig -v -s <drive>:\$MFT` to `contig -v -accepteula <drive>:\$MFT` to remove recursive flag (-s) causing issues and add -accepteula for first-run license acceptance.
+
+## [2.5.0] - 2025-08-16
+### Added
+- Result-driven prompts in OS Maintenance:
+  - After `dism /online /cleanup-image /checkhealth`, prompts to skip `scanhealth` and `restorehealth` if no corruption is detected (default "No").
+  - After `dism /online /cleanup-image /analyzecomponentstore`, prompts to skip `startcomponentcleanup` if cleanup not recommended (default "No").
+- On-screen section summaries after each major section (TRIM Check, Drive Detection, OS Maintenance, Disk Maintenance, Shadow Copy Maintenance, Drive Optimization, Temp File Cleanup, Hardware/Driver Checks, Memory/Update Checks, Malware Scan) to display results (e.g., errors, repairs, space freed) and guide user decisions.
+- Error and repair counters for OS Maintenance and Disk Maintenance sections, displayed in summaries.
+
 ## [2.4.1] - 2025-08-16
 ### Fixed
 - Corrected PowerShell parsing errors in Temp File Cleanup section by using `${}` for variables with colons (e.g., `${sysTempPath}`) in `Write-Log` statements to handle paths like `C:\Windows\Temp`.
