@@ -1,67 +1,23 @@
 # Changelog
 All notable changes to the WindowsMaintScript project will be documented in this file.
 
-## [2.5.2] - 2025-08-16
-### Fixed
-- Corrected PowerShell parsing errors in Shadow Copy Maintenance section by using `${shadowVolume}` in `Write-Host` statements to handle colons in shadow volume names (e.g., `\Device\HarddiskVolumeShadowCopy3`).
-
-## [2.5.1] - 2025-08-16
-### Changed
-- Modified Contig command from `contig -v -s <drive>:\$MFT` to `contig -v -accepteula <drive>:\$MFT` to remove recursive flag (-s) causing issues and add -accepteula for first-run license acceptance.
-
-## [2.5.0] - 2025-08-16
+## [2.5.5] - 2025-08-16
 ### Added
-- Result-driven prompts in OS Maintenance:
-  - After `dism /online /cleanup-image /checkhealth`, prompts to skip `scanhealth` and `restorehealth` if no corruption is detected (default "No").
-  - After `dism /online /cleanup-image /analyzecomponentstore`, prompts to skip `startcomponentcleanup` if cleanup not recommended (default "No").
-- On-screen section summaries after each major section (TRIM Check, Drive Detection, OS Maintenance, Disk Maintenance, Shadow Copy Maintenance, Drive Optimization, Temp File Cleanup, Hardware/Driver Checks, Memory/Update Checks, Malware Scan) to display results (e.g., errors, repairs, space freed) and guide user decisions.
-- Error and repair counters for OS Maintenance and Disk Maintenance sections, displayed in summaries.
+- Initial System State Check section to detect pending Windows Updates (via `PSWindowsUpdate` module or `Get-HotFix` fallback) and pending restarts (Windows Update, Component-Based Servicing, Pending File Rename Operations, SCCM client).
+- Prompts user to restart if pending updates or restarts are detected (default "Y"). If declined, proceeds with warning that results may be affected.
+- Logs pending updates (count and details) and restart sources.
+- Updated Log Analysis section to include pending updates and restarts in summary.
+- Moved pending reboot check from Memory and Update Checks to Initial System State Check.
 
-## [2.4.1] - 2025-08-16
-### Fixed
-- Corrected PowerShell parsing errors in Temp File Cleanup section by using `${}` for variables with colons (e.g., `${sysTempPath}`) in `Write-Log` statements to handle paths like `C:\Windows\Temp`.
-
-## [2.4.0] - 2025-08-16
+## [2.5.4] - 2025-08-16
 ### Added
-- Temp File Cleanup section: Clears `C:\Windows\Temp`, `%TEMP%`, and `C:\Windows\SoftwareDistribution\Download` with user prompt (default "Y").
-- Tracks and logs space freed (in MB) and cleanup errors.
-- Added cleanup metrics to log analysis summary (errors and MB freed).
-- Recommendations for regular cleanups if significant space is freed (>1 GB) or if cleanup errors occur.
+- Real-time DISM progress display on console using `Write-Progress` for percentage updates (e.g., `[========== 18.1% ]`) during `checkhealth`, `scanhealth`, `restorehealth`, `AnalyzeComponentStore`, and `StartComponentCleanup`.
+- Cleaned up DISM log output to exclude repetitive progress lines (e.g., `[========== 18.1% ]`), logging only the final progress percentage (e.g., `[=========== 100.0% ]`) and significant messages (e.g., "The operation completed successfully").
 
-## [2.3.0] - 2025-08-16
-### Fixed
-- Corrected SSD vs. HDD detection by using `Get-Partition` and `Get-Disk` for reliable drive-to-disk mapping, with fallback to `FriendlyName` checks for "SSD" or "NVMe" if `MediaType` is unspecified. Ensures C: and E: (SSDs) and D: (HDD) are identified correctly, avoiding unnecessary defrag prompts on SSDs.
-
-## [2.2.0] - 2025-08-15
+## [2.5.3] - 2025-08-16
 ### Added
-- Drive type detection using `Get-PhysicalDisk` and `Get-Volume` to identify SSDs vs. non-SSDs.
-- Conditional defrag prompts: Automatic `defrag /C /O /V` for SSDs (TRIM) without prompt; user prompt (default "N") for non-SSDs (HDDs) with warning about long runtime.
-- Drive type logging and inclusion in analysis summary (e.g., "Contig Errors on C: (SSD): 0").
-
-## [2.1.0] - 2025-08-14
-### Added
-- Expanded Event Log analysis for additional IDs (7, 11, 50, 55, 98, 137, 140, 153, 219, 41, 7023, 2004, 1001, 12289, 12290) covering disk, NTFS, driver, hardware, memory, and VSS issues.
-- Hardware checks: SMART status via `Get-PhysicalDisk` and `Get-StorageReliabilityCounter` for disk health (read/write errors, wear).
-- Driver checks: Scans for unsigned/problem drivers with `Get-WmiObject Win32_PnPSignedDriver` and runs `pnputil /scan-devices` if issues found.
-- Memory checks: Detects pending reboots and offers to schedule Windows Memory Diagnostic (`mdsched.exe`).
-- Malware scan: Quick Windows Defender scan (`Start-MpScan -ScanType QuickScan`) with threat detection via Event IDs 1000, 1001.
-- Update checks: Scans for failed updates with `Get-HotFix` and runs `wuauclt /detectnow` if needed.
-- Dirty volume checks: Uses `fsutil dirty query` to detect and schedule CHKDSK for dirty volumes.
-- Free space checks: Warns if drive free space is <10% using `Get-Volume`.
-- Recommendations section in analysis based on findings (e.g., "Run full CHKDSK /f /r if disk errors detected").
-- Sysinternals Suite download prompt if `contig.exe` is missing.
-### Changed
-- Renamed script to `EnhancedCombinedSystemMaintenance.ps1` to reflect expanded scope.
-- Extended CHKDSK to all NTFS drives, with `/f /sdcleanup` for corrupted drives.
-- Enhanced shadow copy maintenance to check and delete corrupted copies across all NTFS drives.
-- Improved logging with detailed section outputs and drive-specific information.
-
-## [1.0.0] - 2025-08-01
-### Added
-- Initial release of `RunSystemMaintenance.ps1`.
-- Executes DISM commands (`checkhealth`, `scanhealth`, `restorehealth`, `AnalyzeComponentStore`, `StartComponentCleanup`), SFC (`/scannow`), CHKDSK (`/scan c:`), and Contig (`-v -s <drive>:\$MFT`).
-- User confirmation prompts for each command (default "Y").
-- Log file creation with hostname and date (e.g., `SystemMaintenanceLog_HOSTNAME_YYYYMMDD.txt`) and rotation.
-- Log analysis for `DISM.log`, `CBS.log`, and CHKDSK Event Log (Wininit, Event ID 1001).
-- Optional repair source for DISM `/restorehealth`.
-- Basic error and repair counting with keyword patterns.
+- Added checks for Windows Defender service (WinDefend) status and third-party antivirus software before running `Start-MpScan` to prevent `CimException` (0x800106ba).
+- Attempts to start WinDefend if stopped and logs the outcome.
+- Checks for third-party antivirus via `Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntiVirusProduct`.
+- Provides recommendations if scan fails (e.g., check Defender status, run `MpCmdRun -SignatureUpdate`, repair system with DISM/SFC).
+- Added Defender error tracking in
