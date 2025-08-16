@@ -1,77 +1,40 @@
-# Changelog for System Maintenance Script
+# Changelog
+All notable changes to the WindowsMaintScript project will be documented in this file.
 
-## Version 1.9.0 - August 15, 2025
-- Added check for `C:\SysinternalsSuite` before DISM commands.
-- If `C:\SysinternalsSuite` is not found, prompt user (default "No") to download Sysinternals Suite from https://download.sysinternals.com/files/SysinternalsSuite.zip, extract to `C:\SysinternalsSuite`, and add to system PATH.
-- Updated `contig` check to include instructions to ensure `C:\SysinternalsSuite` is in PATH if download is skipped.
-- Updated version to 1.9.0 to reflect Sysinternals Suite download feature.
-- Updated `readme.md` to document the Sysinternals Suite download feature and requirements.
-- Retained all previous functionality: hostname/date log naming, log rotation, Yes/No prompts, optional `/restorehealth` source, Contig command, real-time SFC progress, CHKDSK commands, and analysis of DISM.log, CBS.log, Event Log, and Contig output.
+## [2.3.0] - 2025-08-16
+### Fixed
+- Corrected SSD vs. HDD detection by using `Get-Partition` and `Get-Disk` for reliable drive-to-disk mapping, with fallback to `FriendlyName` checks for "SSD" or "NVMe" if `MediaType` is unspecified. Ensures C: and E: (SSDs) and D: (HDD) are identified correctly, avoiding unnecessary defrag prompts on SSDs.
 
-## Version 1.8.0 - August 15, 2025
-- Added `chkdsk /f /sdcleanup c:` command after `chkdsk /scan c:` to fix file system errors and clean up unused security descriptors.
-- Updated CHKDSK Event Log analysis to include errors and repairs from both CHKDSK commands.
-- Updated `$chkdskRepairPattern` to include "cleaned" for detecting `/sdcleanup` actions.
-- Updated version to 1.8.0 to reflect new CHKDSK command.
-- Updated `readme.md` to document the new CHKDSK command and its analysis.
-- Retained all previous functionality: hostname/date log naming, log rotation, Yes/No prompts, optional `/restorehealth` source, Contig command, real-time SFC progress, and analysis of DISM.log, CBS.log, Event Log, and Contig output.
+## [2.2.0] - 2025-08-15
+### Added
+- Drive type detection using `Get-PhysicalDisk` and `Get-Volume` to identify SSDs vs. non-SSDs.
+- Conditional defrag prompts: Automatic `defrag /C /O /V` for SSDs (TRIM) without prompt; user prompt (default "N") for non-SSDs (HDDs) with warning about long runtime.
+- Drive type logging and inclusion in analysis summary (e.g., "Contig Errors on C: (SSD): 0").
 
-## Version 1.7.0 - August 15, 2025
-- Modified `sfc /scannow` execution to use `Start-Process` with `-NoNewWindow` to display real-time progress output in the console.
-- Captured `sfc /scannow` output to a temporary file, then appended to the log and displayed in the console.
-- Updated version to 1.7.0 to reflect improved SFC progress handling.
-- Updated `readme.md` to document the real-time progress display for `sfc /scannow`.
-- Retained all previous functionality: hostname/date log naming, log rotation, Yes/No prompts, optional `/restorehealth` source, Contig command, and analysis of DISM.log, CBS.log, Event Log, and Contig output.
+## [2.1.0] - 2025-08-14
+### Added
+- Expanded Event Log analysis for additional IDs (7, 11, 50, 55, 98, 137, 140, 153, 219, 41, 7023, 2004, 1001, 12289, 12290) covering disk, NTFS, driver, hardware, memory, and VSS issues.
+- Hardware checks: SMART status via `Get-PhysicalDisk` and `Get-StorageReliabilityCounter` for disk health (read/write errors, wear).
+- Driver checks: Scans for unsigned/problem drivers with `Get-WmiObject Win32_PnPSignedDriver` and runs `pnputil /scan-devices` if issues found.
+- Memory checks: Detects pending reboots and offers to schedule Windows Memory Diagnostic (`mdsched.exe`).
+- Malware scan: Quick Windows Defender scan (`Start-MpScan -ScanType QuickScan`) with threat detection via Event IDs 1000, 1001.
+- Update checks: Scans for failed updates with `Get-HotFix` and runs `wuauclt /detectnow` if needed.
+- Dirty volume checks: Uses `fsutil dirty query` to detect and schedule CHKDSK for dirty volumes.
+- Free space checks: Warns if drive free space is <10% using `Get-Volume`.
+- Recommendations section in analysis based on findings (e.g., "Run full CHKDSK /f /r if disk errors detected").
+- Sysinternals Suite download prompt if `contig.exe` is missing.
+### Changed
+- Renamed script to `EnhancedCombinedSystemMaintenance.ps1` to reflect expanded scope.
+- Extended CHKDSK to all NTFS drives, with `/f /sdcleanup` for corrupted drives.
+- Enhanced shadow copy maintenance to check and delete corrupted copies across all NTFS drives.
+- Improved logging with detailed section outputs and drive-specific information.
 
-## Version 1.6.0 - August 15, 2025
-- Added analysis of Contig output to count errors and MFT fragment count (e.g., "is in X fragments").
-- Integrated Contig analysis into the log analysis section, with summary displayed and logged.
-- Updated version to 1.6.0 to reflect Contig output analysis.
-- Updated `readme.md` to document Contig output analysis.
-- Retained all previous functionality: hostname/date log naming, log rotation, Yes/No prompts, optional `/restorehealth` source, Contig command, and analysis of DISM.log, CBS.log, and CHKDSK Event Log.
-## Version 1.5.0 - August 15, 2025
-- Added `contig` command to defragment the Master File Table (MFT) on a user-specified drive (default: C:).
-- Implemented drive letter prompt with validation for the `contig` command.
-- Added check for `contig` availability in PATH, with instructions to download if missing.
-- Updated version to 1.5.0 to reflect the new command.
-- Updated `readme.md` to document the `contig` command and its requirements.
-- Retained all previous functionality: hostname/date log naming, log rotation, Yes/No prompts, optional `/restorehealth` source, and analysis of DISM.log, CBS.log, and CHKDSK Event Log.
-
-## Version 1.4.0 - August 15, 2025
-- Modified log file naming to include hostname and date (format: `SystemMaintenanceLog_HOSTNAME_YYYYMMDD.txt`).
-- Implemented log rotation to append a numeric suffix (e.g., `_1`, `_2`) if a log file already exists.
-- Updated version to 1.4.0 to reflect log naming and rotation changes.
-- Updated `readme.md` to document new log file naming and rotation behavior.
-- Retained all previous functionality: verbose comments, Yes/No prompts, logging, optional `/restorehealth` source, and analysis of DISM.log, CBS.log, and CHKDSK Event Log.
-
-## Version 1.3.0 - August 15, 2025
-- Added support for an optional repair source for `dism /online /cleanup-image /restorehealth` via `$repairSource` variable.
-- Updated `/restorehealth` command to dynamically include `/source` if specified, defaulting to Windows Update otherwise.
-- Incremented version to reflect new functionality.
-- Updated `readme.md` to document the new repair source option.
-- Retained all previous functionality: verbose comments, Yes/No prompts, logging, and analysis of DISM.log, CBS.log, and CHKDSK Event Log.
-
-## Version 1.2.0 - August 15, 2025
-- Added verbose comments throughout the script for better readability and maintenance.
-- Introduced versioning with version number (1.2.0) and last modified date in script header.
-- Added changelog.txt to track version history.
-- Added readme.md for GitHub documentation with usage instructions and requirements.
-- Retained all previous functionality:
-  - Yes/No prompts with default "Yes" for all commands and log analysis.
-  - Logging of command outputs to SystemMaintenanceLog.txt.
-  - Analysis of DISM.log, CBS.log, and CHKDSK Event Log for errors and repairs.
-  - Summary of errors and repairs displayed to user and logged.
-
-## Version 1.1.0 - August 14, 2025
-- Added Event Log analysis for CHKDSK (Wininit, Event ID 1001) to count errors and repairs.
-- Limited CHKDSK Event Log analysis to last 24 hours and max 10 events for performance.
-- Updated log analysis section to include CHKDSK results in summary.
-- Improved error handling for Event Log access.
-
-## Version 1.0.0 - August 13, 2025
-- Initial release.
-- Included DISM commands: CheckHealth, ScanHealth, RestoreHealth, AnalyzeComponentStore, StartComponentCleanup.
-- Added SFC /scannow and CHKDSK /scan c: commands.
-- Implemented Yes/No prompts with default "Yes" for each command.
-- Added logging of command outputs to SystemMaintenanceLog.txt.
-- Added analysis of DISM.log and CBS.log for errors and repairs with summary output.
+## [1.0.0] - 2025-08-01
+### Added
+- Initial release of `RunSystemMaintenance.ps1`.
+- Executes DISM commands (`checkhealth`, `scanhealth`, `restorehealth`, `AnalyzeComponentStore`, `StartComponentCleanup`), SFC (`/scannow`), CHKDSK (`/scan c:`), and Contig (`-v -s <drive>:\$MFT`).
+- User confirmation prompts for each command (default "Y").
+- Log file creation with hostname and date (e.g., `SystemMaintenanceLog_HOSTNAME_YYYYMMDD.txt`) and rotation.
+- Log analysis for `DISM.log`, `CBS.log`, and CHKDSK Event Log (Wininit, Event ID 1001).
+- Optional repair source for DISM `/restorehealth`.
+- Basic error and repair counting with keyword patterns.
