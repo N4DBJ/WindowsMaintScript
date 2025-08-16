@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to the WindowsMaintScript project will be documented in this file.
 
+## [2.4.0] - 2025-08-16
+### Added
+- Temp File Cleanup section: Clears `C:\Windows\Temp`, `%TEMP%`, and `C:\Windows\SoftwareDistribution\Download` with user prompt (default "Y").
+- Tracks and logs space freed (in MB) and cleanup errors.
+- Added cleanup metrics to log analysis summary (errors and MB freed).
+- Recommendations for regular cleanups if significant space is freed (>1 GB) or if cleanup errors occur.
+
 ## [2.3.0] - 2025-08-16
 ### Fixed
 - Corrected SSD vs. HDD detection by using `Get-Partition` and `Get-Disk` for reliable drive-to-disk mapping, with fallback to `FriendlyName` checks for "SSD" or "NVMe" if `MediaType` is unspecified. Ensures C: and E: (SSDs) and D: (HDD) are identified correctly, avoiding unnecessary defrag prompts on SSDs.

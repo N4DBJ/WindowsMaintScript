@@ -2,7 +2,7 @@
 
 ## Overview
 
-This PowerShell script automates comprehensive system maintenance tasks on Windows by running DISM, SFC, CHKDSK, Contig, defrag, hardware checks, driver checks, memory diagnostics, malware scans, and Event Log analysis, with user confirmation prompts. It logs all command outputs to a file named with the hostname and date (e.g., `CombinedSystemMaintenanceLog_DESKTOP123_20250816.txt`) and analyzes logs (`DISM.log`, `CBS.log`, Event Logs) to provide a detailed summary of errors, repairs, and recommendations. It supports multiple NTFS drives, SSD/HDD detection, optional repair sources for DISM, and Sysinternals Suite integration.
+This PowerShell script automates comprehensive system maintenance tasks on Windows by running DISM, SFC, CHKDSK, Contig, defrag, temp file cleanup, hardware checks, driver checks, memory diagnostics, malware scans, and Event Log analysis, with user confirmation prompts. It logs all command outputs to a file named with the hostname and date (e.g., `CombinedSystemMaintenanceLog_DESKTOP123_20250816.txt`) and analyzes logs (`DISM.log`, `CBS.log`, Event Logs) to provide a detailed summary of errors, repairs, and recommendations. It supports multiple NTFS drives, SSD/HDD detection, optional repair sources for DISM, and Sysinternals Suite integration.
 
 ## Features
 
@@ -29,6 +29,10 @@ This PowerShell script automates comprehensive system maintenance tasks on Windo
   - **Drive Optimization**:
     - `fsutil behavior query DisableDeleteNotify`: Checks TRIM status for SSDs.
     - `defrag /C /O /V`: Runs TRIM for SSDs (automatic) or defragmentation for non-SSDs (prompted, default "No" due to long runtime).
+  - **Temp File Cleanup**:
+    - Clears `C:\Windows\Temp`, `%TEMP%`, and `C:\Windows\SoftwareDistribution\Download`.
+    - Tracks and logs space freed (in MB) and errors.
+    - Stops/starts Windows Update service (`wuauserv`) for update cache cleanup.
   - **Hardware and Driver Checks**:
     - `Get-PhysicalDisk` and `Get-StorageReliabilityCounter`: Checks SMART status (health, read/write errors, wear).
     - `Get-WmiObject Win32_PnPSignedDriver`: Scans for unsigned/problem drivers.
@@ -81,18 +85,18 @@ This PowerShell script automates comprehensive system maintenance tasks on Windo
    ```powershell
    .\EnhancedCombinedSystemMaintenance.ps1
    ```
-5. Follow the Yes/No prompts for each section (OS Maintenance, Disk Maintenance, Shadow Copy Maintenance, Drive Optimization, Hardware/Driver Checks, Memory/Update Checks, Malware Scan, Log Analysis). Press Enter to accept defaults (usually "Yes", except "No" for non-SSD defrag and memory diagnostic).
+5. Follow the Yes/No prompts for each section (OS Maintenance, Disk Maintenance, Shadow Copy Maintenance, Drive Optimization, Temp File Cleanup, Hardware/Driver Checks, Memory/Update Checks, Malware Scan, Log Analysis). Press Enter to accept defaults (usually "Yes", except "No" for non-SSD defrag and memory diagnostic).
 6. Review the console output and log file (e.g., `CombinedSystemMaintenanceLog_HOSTNAME_YYYYMMDD.txt`) for results, analysis, and recommendations.
 7. Reboot if prompted (e.g., for CHKDSK repairs or memory diagnostics).
 
 ## Output
 
-* **Console**: Displays command execution status, errors, drive types (SSD/HDD), and a detailed summary of errors, repairs, and recommendations (e.g., "Disk/NTFS Errors: 0", "Run full Defender scan if threats detected").
-* **Log File**: Named `CombinedSystemMaintenanceLog_HOSTNAME_YYYYMMDD.txt` (e.g., `CombinedSystemMaintenanceLog_DESKTOP123_20250816.txt`). If the file exists, a numeric suffix (e.g., `_1`, `_2`) is appended. Contains all command outputs, skipped commands, drive type details, and analysis summary.
+* **Console**: Displays command execution status, errors, drive types (SSD/HDD), temp file cleanup results (space freed, errors), and a detailed summary of errors, repairs, and recommendations (e.g., "Temp File Cleanup Freed: 1500 MB", "Run full Defender scan if threats detected").
+* **Log File**: Named `CombinedSystemMaintenanceLog_HOSTNAME_YYYYMMDD.txt` (e.g., `CombinedSystemMaintenanceLog_DESKTOP123_20250816.txt`). If the file exists, a numeric suffix (e.g., `_1`, `_2`) is appended. Contains all command outputs, skipped commands, drive type details, cleanup metrics, and analysis summary.
 * **Log Analysis**:
   - Counts errors (e.g., "error", "failed", "corruption") and repairs (e.g., "repaired", "fixed") in `DISM.log`, `CBS.log`, and Event Logs.
-  - Includes drive-specific metrics (e.g., MFT fragments, drive type) and system-wide issues (disk, driver, hardware, VSS).
-  - Provides recommendations based on findings (e.g., "Free up space on C:").
+  - Includes drive-specific metrics (e.g., MFT fragments, drive type), cleanup metrics (space freed, errors), and system-wide issues (disk, driver, hardware, VSS).
+  - Provides recommendations based on findings (e.g., "Schedule regular cleanups if >1 GB freed").
 
 ## Customization
 
@@ -104,6 +108,7 @@ This PowerShell script automates comprehensive system maintenance tasks on Windo
 * **Log Patterns**: Modify `$errorPattern`, `$repairPattern`, `$chkdskErrorPattern`, etc., for more specific error/repair detection.
 * **Drive Exclusion**: Filter drives in `$ntfsDrives` (e.g., `$ntfsDrives = $ntfsDrives | Where-Object { $_.DriveLetter -ne 'D' }`).
 * **MFT Fragment Threshold**: Adjust the recommendation logic (e.g., warn if MFT fragments >50).
+* **Temp File Cleanup**: Add additional paths (e.g., browser caches) or adjust thresholds for recommendations (e.g., warn if >500 MB freed).
 
 ## Notes
 
@@ -111,6 +116,7 @@ This PowerShell script automates comprehensive system maintenance tasks on Windo
 * Event Log analysis covers System and Application logs for disk (IDs 7, 11, 50, 55, 98, 137, 140, 153), driver (219, 7023), hardware/memory (41, 2004, 1001), and VSS (12289, 12290) issues over the last 48 hours.
 * Shadow copy maintenance deletes corrupted copies (e.g., `\Device\HarddiskVolumeShadowCopy3`) and creates a new restore point for C: if needed.
 * SSD optimization uses `defrag /C /O /V` for TRIM (automatic); HDD defragmentation is prompted (default "No") to avoid long runtimes.
+* Temp file cleanup is SSD-safe, skips locked files, and restarts the Windows Update service after clearing the update cache.
 * Log parsing uses keyword-based patterns, which may include false positives. Refine patterns for precision if needed.
 * Large logs (e.g., CBS.log) or Event Logs may take a few seconds to parse.
 * Ensure the repair source (if specified) matches the Windows version/edition.
