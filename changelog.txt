@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to the WindowsMaintScript project will be documented in this file.
 
+## [2.5.7] - 2025-08-16
+### Fixed
+- Resolved DISM command execution error in OS Maintenance Section where `Start-Process` passed the entire command string including "dism" as an argument, causing "Error: 87". Updated `$osCommands` to store only arguments for DISM commands, excluding "dism" prefix, and adjusted `Start-Process` to use the correct argument list.
+
 ## [2.5.6] - 2025-08-16
 ### Fixed
 - Resolved `Start-Process` error in OS Maintenance Section where `RedirectStandardOutput` and `RedirectStandardError` used the same temporary file for DISM commands. Now uses separate files for output and error streams, combining them for logging and display.
