@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to the WindowsMaintScript project will be documented in this file.
 
+## [2.4.1] - 2025-08-16
+### Fixed
+- Corrected PowerShell parsing errors in Temp File Cleanup section by using `${}` for variables with colons (e.g., `${sysTempPath}`) in `Write-Log` statements to handle paths like `C:\Windows\Temp`.
+
 ## [2.4.0] - 2025-08-16
 ### Added
 - Temp File Cleanup section: Clears `C:\Windows\Temp`, `%TEMP%`, and `C:\Windows\SoftwareDistribution\Download` with user prompt (default "Y").
