@@ -114,7 +114,7 @@ The `WindowsMaintScript` is a comprehensive PowerShell script designed for Windo
 - **2.5.1 (2025-08-15)**:
   - Added multi-drive support, SSD/HDD detection, and optional Sysinternals download.
 - **2.5.0 (2025-08-14)**:
-  - Combined multiple maintenance tasks into a single script with logging and prompts.
+  - Combined multiple maintenance scripts into a single script with logging and prompts.
 - **2.0.0 (2025-08-10)**:
   - Initial release with basic DISM, SFC, CHKDSK, and defrag functionality.
 

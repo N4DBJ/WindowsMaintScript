@@ -34,7 +34,7 @@ All notable changes to the WindowsMaintScript project will be documented in this
 ## [2.5.2] - 2025-08-16
 ### Added
 - Result-driven prompts for DISM commands, asking to proceed only if prior commands indicate issues (e.g., skip `RestoreHealth` if `CheckHealth` finds no corruption).
-- On-screen section summaries for each maintenance section (e.g., OS Maintenance, Disk Maintenance) with errors, repairs, and skipped actions.
+- On-screen section summaries after each major section (e.g., OS Maintenance, Disk Maintenance) with errors, repairs, and skipped actions.
 - Temp file cleanup section for `C:\Windows\Temp`, `%TEMP%`, and `C:\Windows\SoftwareDistribution\Download`, with space freed calculation.
 - Improved SSD vs. HDD detection using `Get-PhysicalDisk` MediaType and fallback to FriendlyName pattern matching.
 
@@ -55,3 +55,45 @@ All notable changes to the WindowsMaintScript project will be documented in this
 ### Added
 - Initial release of combined maintenance script with basic DISM, SFC, CHKDSK, and defrag functionality.
 - Support for logging and basic error detection.
+- Added checks for Windows Defender service (WinDefend) status and third-party antivirus software before running Start-MpScan.
+- Fixed PowerShell parsing errors in Shadow Copy Maintenance.
+- Changed Contig command to remove recursive flag and add -accepteula.
+
+## [2.5.0] - 2025-08-14
+### Added
+- Result-driven prompts for DISM commands, asking to proceed only if prior commands indicate issues (e.g., skip `RestoreHealth` if `CheckHealth` finds no corruption).
+- On-screen section summaries after each major section (e.g., OS Maintenance, Disk Maintenance) with errors, repairs, and skipped actions.
+- Temp file cleanup section for `C:\Windows\Temp`, `%TEMP%`, and `C:\Windows\SoftwareDistribution\Download`, with space freed calculation.
+- Improved SSD vs. HDD detection using `Get-PhysicalDisk` MediaType and fallback to FriendlyName pattern matching.
+
+## [2.5.1] - 2025-08-15
+### Added
+- Support for multiple NTFS drives in disk maintenance, shadow copy checks, and optimization.
+- Automatic detection of SSD vs. HDD for tailored defragmentation (`/O` switch for SSD TRIM).
+- Optional Sysinternals Suite download and PATH integration if not present.
+
+## [2.5.0] - 2025-08-14
+### Added
+- Combined multiple maintenance scripts into a single script with sections for TRIM, OS maintenance (DISM/SFC), disk maintenance (CHKDSK/fsutil/Contig), shadow copy maintenance, optimization, hardware/driver checks, memory/update checks, malware scan, and VSS verification.
+- Comprehensive logging to a timestamped file with hostname.
+- User prompts for each section with default "Y" or "N" based on action.
+- Detailed log analysis summarizing errors, repairs, and recommendations.
+
+## [2.0.0] - 2025-08-10
+### Added
+- Initial release of combined maintenance script with basic DISM, SFC, CHKDSK, and defrag functionality.
+- Support for logging and basic error detection.
+- Added checks for Windows Defender service (WinDefend) status and third-party antivirus software before running Start-MpScan.
+- Fixed PowerShell parsing errors in Shadow Copy Maintenance.
+- Changed Contig command to remove recursive flag and add -accepteula.
+
+## Contributing
+- Submit issues or pull requests via the repository (if hosted).
+- Test on Windows 10/11 systems and report compatibility issues.
+- Suggest additional maintenance tasks or optimizations.
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details (if applicable).
+
+## Contact
+For support, contact the script author via the repository or xAI support channels (e.g., https://x.ai).
