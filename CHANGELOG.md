@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.6.0] - 2025-08-16
+### Fixed
+- Fixed 'Write-Log' not recognized error by moving function definition before first use.
+- Retained UTF-8 encoding for all log writes from 2.5.9 to resolve "Unsupported text encoding" upload issues.
+- Retained streamlined logging from 2.5.8 (task start, command, filtered output, result, summary only).
+- Retained script version logging at start ("Script Version: 2.6.0").
+- Retained Windows 11-specific error patterns and recommendations in Log Analysis section.
+
 ## [2.5.9] - 2025-08-16
 ### Changed
 - Changed log file encoding to UTF-8 for all writes to resolve "Unsupported text encoding" upload issues.
