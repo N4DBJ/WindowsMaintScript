@@ -3,7 +3,7 @@
 ## Overview
 The **Enhanced Combined System Maintenance Script** (`EnhancedCombinedSystemMaintenance.ps1`) is a comprehensive PowerShell script designed for Windows 11 system maintenance. It automates critical tasks such as OS maintenance (DISM, SFC), disk maintenance (CHKDSK, fsutil, Contig), shadow copy maintenance, drive optimization (defrag), temporary file cleanup, hardware/driver checks, memory/update checks, and malware scanning with Windows Defender. The script includes user prompts, detailed logging, multi-drive support, and log analysis tailored for Windows 11.
 
-**Current Version**: 2.7.0 (Released August 17, 2025)
+**Current Version**: 2.7.1 (Released August 17, 2025)
 
 ## Features
 - **OS Maintenance**: Runs DISM (`CheckHealth`, `ScanHealth`, `RestoreHealth`, `AnalyzeComponentStore`, `StartComponentCleanup`) and SFC (`/scannow`) to repair system files and component store.
