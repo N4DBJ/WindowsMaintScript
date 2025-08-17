@@ -1,7 +1,7 @@
 # Changelog
 
 All notable changes to the Enhanced Combined System Maintenance Script will be documented in this file.
-
+Testing all uploads with: Invoke-ScriptAnalyzer -Path .\filename.ps1 -Severity Error -IncludeRule @('PSUseConsistentIndentation', 'PSUseConsistentWhitespace', 'PSAvoidUsingWriteHost', 'PSAvoidUsingInvokeExpression', 'PSUseDeclaredVarsMoreThanAssignments')
 ## [2.7.0] - 2025-08-17
 ### Added
 - Introduced `$scriptVersion` variable to manage version display in a single location.
