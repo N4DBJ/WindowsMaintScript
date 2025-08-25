@@ -1,0 +1,3 @@
+﻿Script Version: 2.8.5
+2025-08-24 19:39:52 - Script Version: 2.8.5
+2025-08-24 19:39:53 - Unsupported OS: . Script optimized for Windows 10/11 and Server 2019+.

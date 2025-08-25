@@ -1,0 +1,17 @@
+﻿Script Version: 2.8.6
+2025-08-24 19:48:27 - Script Version: 2.8.6
+2025-08-24 19:48:29 - OS Detected: Microsoft Windows 10 Pro - Server: False
+2025-08-24 19:48:29 - Starting Initial System State Check...
+2025-08-24 19:48:29 - Checking for pending Windows Updates...
+2025-08-24 19:48:44 - No pending updates found.
+2025-08-24 19:48:44 - Checking for pending restarts...
+2025-08-24 19:48:44 - SCCM client check unavailable: Invalid namespace 
+2025-08-24 19:48:44 - No pending updates or restarts detected.
+2025-08-24 20:03:50 - Starting TRIM check...
+2025-08-24 20:03:50 - Result: TRIM is enabled.
+2025-08-24 20:03:52 - Found NTFS drives: C, E, D
+2025-08-24 20:03:52 - SSD drives: C, E
+2025-08-24 20:03:52 - Non-SSD drives: D
+2025-08-24 20:03:52 - Drive C: MediaType=SSD, FriendlyName=Samsung SSD 980 1TB
+2025-08-24 20:03:52 - Drive E: MediaType=SSD, FriendlyName=Samsung SSD 980 PRO 2TB
+2025-08-24 20:03:52 - Drive D: MediaType=HDD, FriendlyName=WDC WD101EFBX-68B0AN0
