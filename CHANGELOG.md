@@ -1,4 +1,8 @@
 # Changelog:
+## Version 2.8.5 - August 24, 2025
+#   2.8.5 (2025-08-24)
+#     - Fixed Contig command by escaping the dollar sign in the MFT path to prevent PowerShell from interpreting `$mft` as a variable. This ensures the correct path (e.g., `C:\$mft`) is passed to Contig.exe.
+#     - Updated logging and console messages to reflect the escaped path for clarity and accuracy.
 #   2.8.4 (2025-08-20):
 #     - Fixed Optimization Section to target specific drives (SSD or non-SSD) instead of using /C parameter, ensuring user choice is respected.
 #     - Added verbose comments throughout for clarity.

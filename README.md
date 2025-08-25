@@ -2,7 +2,7 @@
 # Windows System Maintenance Script
 
 ## Overview
-The `WinSystemMaintenance_2.8.4.ps1` PowerShell script is a comprehensive tool for maintaining Windows systems (Windows 10/11 and Server 2019+). It performs OS repairs, disk checks, shadow copy management, drive optimization, temp file cleanup, hardware/driver verification, memory/update checks, malware scans, and log analysis. The script prompts for confirmation at each step, logs all actions in a timestamped file, and provides detailed summaries with recommendations.
+The `WinSystemMaintenance_2.8.5.ps1` PowerShell script is a comprehensive tool for maintaining Windows systems (Windows 10/11 and Server 2019+). It performs OS repairs, disk checks, shadow copy management, drive optimization, temp file cleanup, hardware/driver verification, memory/update checks, malware scans, and log analysis. The script prompts for confirmation at each step, logs all actions in a timestamped file, and provides detailed summaries with recommendations.
 
 ## Requirements
 - **Operating System**: Windows 10/11 or Server 2019+
@@ -12,9 +12,9 @@ The `WinSystemMaintenance_2.8.4.ps1` PowerShell script is a comprehensive tool f
 - **Modules**: PSWindowsUpdate (auto-installed if missing)
 
 ## Usage
-1. Save the script as `WinSystemMaintenance_2.8.4.ps1`.
+1. Save the script as `WinSystemMaintenance_2.8.5.ps1`.
 2. Open PowerShell as Administrator.
-3. Run the script: `.\WinSystemMaintenance_2.8.4.ps1`
+3. Run the script: `.\WinSystemMaintenance_2.8.5.ps1`
 4. Follow prompts to confirm each maintenance section (Y/N, default options provided).
 5. Review the generated log file (e.g., `CombinedSystemMaintenanceLog_<hostname>_<date>.txt`) for detailed results.
 
@@ -34,12 +34,12 @@ The `WinSystemMaintenance_2.8.4.ps1` PowerShell script is a comprehensive tool f
 - **2.8.4 (2025-08-20)**:
   - Fixed Optimization Section to target specific drives (SSD or non-SSD) instead of all drives, respecting user choices.
   - Added verbose comments for better code understanding.
-- See the script header for prior changelog details.
+- See the CHANGELOG for prior changelog details.
 
 ## Syntax Validation
 To ensure the script is free of syntax errors, use PSScriptAnalyzer:
 - Install: `Install-Module -Name PSScriptAnalyzer`
-- Run: `Invoke-ScriptAnalyzer -Path WinSystemMaintenance_2.8.4.ps1 -Severity Error,Warning -ExcludeRule PSAvoidUsingWriteHost,PSUseDeclaredVarsMoreThanAssignments`
+- Run: `Invoke-ScriptAnalyzer -Path WinSystemMaintenance_2.8.5.ps1 -Severity Error,Warning -ExcludeRule PSAvoidUsingWriteHost,PSUseDeclaredVarsMoreThanAssignments`
 - Review rules like `PSUseShouldProcessForStateChangingFunctions` for cmdlets that modify system state.
 
 ## Notes for Servers
@@ -62,7 +62,7 @@ To combine this with the earlier part of the script:
 1. Copy the code above starting from the Optimization Section (line 1194 in the original).
 2. Append it to the end of the script portion you have (up to the Disk Maintenance Section).
 3. Ensure there are no duplicate variable declarations or sections. The script is modular, so the sections should align without overlap.
-4. Save the combined script as `WinSystemMaintenance_2.8.4.ps1`.
+4. Save the combined script as `WinSystemMaintenance_2.8.5.ps1`.
 5. Save the README.md content as `README.md` in the same directory.
 
 ### Notes
