@@ -1,5 +1,7 @@
 # Changelog:
 ## Version 2.8.5 - August 24, 2025
+#   2.8.6 (2025-08-24)
+#     - Fixed parsing error in Write-Log statement for temp file cleanup by using ${folder} to properly delimit the variable name before the colon.
 #   2.8.5 (2025-08-24)
 #     - Fixed Contig command by escaping the dollar sign in the MFT path to prevent PowerShell from interpreting `$mft` as a variable. This ensures the correct path (e.g., `C:\$mft`) is passed to Contig.exe.
 #     - Updated logging and console messages to reflect the escaped path for clarity and accuracy.
